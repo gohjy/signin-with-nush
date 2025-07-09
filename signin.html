@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+</head>
+<body>
+    <div id="message">
+        Please wait...
+    </div>
+
+    <script>
+        function main() {
+            const continueUrl = new URL(new URL(location.href).searchParams.get("callback"));
+            if (!continueUrl) throw new Error("No url");
+
+            const callbackUrl = new URL("./callback", location.href);
+            callbackUrl.searchParams.set("callback", continueUrl.href);
+
+            const loginUrl = new URL("https://auth.coding398.dev/go/microsoft");
+            loginUrl.searchParams.set("callback", callbackUrl.href);
+
+            location.replace(loginUrl);
+        }
+
+        try {
+            main();
+        } catch (e) {
+            document.querySelector("#message").textContent = `An error occured (${e.message}). Check your callback URL.`
+        }
+    </script>
+</body>
+</html>
