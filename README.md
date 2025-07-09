@@ -31,7 +31,9 @@ try {
 ## Returned data
 Sign in with NUSH will return a JSON object, which will always contain a `type` property. Scenarios are detailed below. (All properties are strings unless otherwise stated.)
 ### `type: unauth`
-When the sign in failed, and the account is not a NUSH student or staff email. No other properties are included.
+When the sign in failed, and the account is not a NUSH student or staff email. Additional properties:
+- `"type"`: "unauth"
+- `"email"`: The email signed in with. No processing is done.
 
 ### `type: student`
 A student (email hxxxxxxx@) has signed in. Additional properties include:
@@ -40,9 +42,9 @@ A student (email hxxxxxxx@) has signed in. Additional properties include:
 - `"email"`: The email
 - `"entryYear"`: Last 2 digits of entry year, for example a h25xxxxx email returns "25"
 - `"entryFullYear"`: Entry year, for example a h25xxxxx email returns "2025"
-- `"entryLevel"`: Level of entry, for examplea h251xxxx email returns 1 (as a number)
+- `"entryLevel"`: Level of entry, for example a h251xxxx email returns 1 (as a number)
 - `"levelId"`: The `id`, stripped of the leading `entryYear` and `entryLevel`
-- `"id"`: The email without the leading "h"
+- `"id"`: The student ID (hxxxxxxx)
 
 ### `type: staff`
 A staff member (email nhs...@ or anhs...@) has signed in. Additional properties include:

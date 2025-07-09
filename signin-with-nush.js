@@ -61,8 +61,8 @@ function main() {
     const userData = studentEmail(userJWT.em) ?? staffEmail(userJWT.em) ?? null;
 
     if (!userData) {
-        if (isCallback) return goCallback({"type": "unauth"});
-        else return {"type": "unauth"};
+        if (isCallback) return goCallback({"type": "unauth", "email": userJWT.em});
+        else return {"type": "unauth", "email": userJWT.em};
     }
 
     userData.name = userJWT.n;
