@@ -19,7 +19,7 @@ https://auth.coding398.dev/go/microsoft?callback=[CALLBACK_URL]
 ```
 2. On your callback page, include the following in a JavaScript **module** (`<script type="module">`):
 ```js
-import signin from "https://cdn.jsdelivr.net/gh/gohjy/signin-with-nush/signin-with-nush.js";
+import signin from "https://cdn.jsdelivr.net/gh/gohjy/signin-with-nush@0.2.0/signin-with-nush.min.js";
 try {
     const userData = signin();
     // your data handling code goes here
