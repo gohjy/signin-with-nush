@@ -13,16 +13,22 @@ function parseJwt (token) {
 const studentEmail = (em) => {
     const matches = em.match(/^(h(\d{2})(\d)(\d{4}))\@nushigh\.edu\.sg$/);
     if (matches) {
-        return {
+        let returnValue = {
             "type": "student",
             "name": null,
             "email": matches[0],
-            "entryYear": matches[2],
-            "entryFullYear": new Date().getFullYear().toString().slice(0, 2) + matches[2],
+            "entryShortYear": +matches[2],
+            "entryYear": 0, // set below
+            "entryFullYear": +(new Date().getFullYear().toString().slice(0, 2) + matches[2]),
             "entryLevel": +matches[3],
             "levelId": matches[4],
-            "id": matches[1]
+            "id": matches[1],
+            "gradYear": 0 // set below
         };
+        returnValue.entryYear = returnValue.entryFullYear;
+        returnValue.gradYear = returnValue.entryFullYear - returnValue.entryLevel + 6;
+
+        return returnValue;
     } else {
         return null;
     }

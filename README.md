@@ -40,8 +40,9 @@ A student (email hxxxxxxx@) has signed in. Additional properties include:
 - `"type"`: "student"
 - `"name"`: Microsoft account name
 - `"email"`: The email
-- `"entryYear"`: Last 2 digits of entry year, for example a h25xxxxx email returns "25"
-- `"entryFullYear"`: Entry year, for example a h25xxxxx email returns "2025"
+- `"entryShortYear"`: Last 2 digits of entry year, for example a h25xxxxx email returns "25"
+- `"entryFullYear"`: Entry year, for example a h25xxxxx email returns 2025 (as a number)
+- `"entryYear"`: Effectively an alias for `entryFullYear`
 - `"entryLevel"`: Level of entry, for example a h251xxxx email returns 1 (as a number)
 - `"levelId"`: The `id`, stripped of the leading `entryYear` and `entryLevel`
 - `"id"`: The student ID (hxxxxxxx)
