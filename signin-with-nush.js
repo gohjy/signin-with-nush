@@ -1,14 +1,15 @@
-import {sha512 as SHA512} from "https://cdn.jsdelivr.net/npm/js-sha512@0.9.0/+esm";
+import {importSPKI, jwtVerify} from "https://cdn.jsdelivr.net/npm/jose@6.0.11/+esm";
 
-function parseJwt (token) {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-
-    return JSON.parse(jsonPayload);
-}
+const alg = 'RS256';
+const spki = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjEsRmaLt0GyimmeZpsKf
+Pm88VPm/kTMu2/aGGxnSXhcyM/FXZfI4LPB2AJsSxTauS43rKiq+Owvh4yWIUs1f
+vFzJ1NUrResuizAF1W2akKPsAloxTgxshBhVApNX55erAHo40OY1w4o+dfLd3jnG
+7KrbkcaHQTlhXP4+USm5lIQmn95+v1l4zny8JCqE1S8wqhLWewmFsBy1QdDMYhDC
+hA96KwXIxfOqtPfsj9+W5isFMMt232JYxuebgjnXSKrRecumDyFEmZbSO4B0Kjsk
+8nIyP4GDC+RT7uszCcnL6CfqjPCK+/ppDZdCRjcdSSFzrbRPLTwxv2ZCRTRRY8/6
+aQIDAQAB
+-----END PUBLIC KEY-----`;
 
 const studentEmail = (em) => {
     const matches = em.match(/^(h(\d{2})(\d)(\d{4}))\@nushigh\.edu\.sg$/);
@@ -60,9 +61,16 @@ const goCallback = data => {
 }
 
 
-function main() {
-    let jwt = query.get("jwt");
-    let userJWT = parseJwt(jwt);
+async function main() {
+    let userJWT;
+    try {
+        let jwt = query.get("jwt");
+        const publicKey = await importSPKI(spki, alg);
+        userJWT = (await jwtVerify(jwt, publicKey)).payload;
+    } catch(e) {
+        if (isCallback) return goCallback({"type": "unauth"});
+        else return {"type": "unauth"};
+    }
 
     const userData = studentEmail(userJWT.em) ?? staffEmail(userJWT.em) ?? null;
 
@@ -79,7 +87,7 @@ function main() {
 
 if (isCallback) {
     try {
-        main();
+        await main();
     } catch (e){
         console.error(e);
         document.body.prepend("An error occured. Check the developer console for more details.")
