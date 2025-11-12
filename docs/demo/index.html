@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>signin-with-nush demo</title>
+</head>
+<body>
+    <p id="main"></p>
+
+    <script>
+        const hexauthUrl = new URL("https://auth.coding398.dev/go/microsoft");
+        const callbackUrl = new URL("./callback.html", location.href);
+        hexauthUrl.searchParams.set("callback", callbackUrl.href);
+
+        const link = document.createElement("a");
+        link.textContent = "Sign in";
+        link.href = hexauthUrl.href;
+
+        document.querySelector("#main").append(link);
+    </script>
+</body>
+</html>

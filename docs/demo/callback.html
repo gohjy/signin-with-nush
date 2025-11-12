@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>signin-with-nush demo</title>
+
+    <style>
+        #output-container {
+            font-family: monospace;
+            white-space: pre;
+
+            &.error {
+                color: red;
+            }
+        }
+    </style>
+</head>
+<body>
+    <output id="output-container"></output>
+    <script type="module">
+        import signinWithNush from "../../signin-with-nush.js";
+
+        const output = document.querySelector("#output-container");
+
+        try {
+            const data = await signinWithNush();
+            output.textContent = JSON.stringify(data, null, 2);
+        } catch(err) {
+            output.textContent = err.toString();
+            output.classList.add("error");
+        }
+    </script>
+</body>
+</html>
