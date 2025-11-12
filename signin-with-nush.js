@@ -1,4 +1,4 @@
-import {importSPKI, jwtVerify} from "https://cdn.jsdelivr.net/npm/jose@6.0.11/+esm";
+import { importSPKI, jwtVerify } from "https://cdn.jsdelivr.net/npm/jose@6.1.1/+esm";
 
 const alg = 'RS256';
 const spki = `-----BEGIN PUBLIC KEY-----
