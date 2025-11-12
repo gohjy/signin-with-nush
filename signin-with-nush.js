@@ -12,7 +12,7 @@ aQIDAQAB
 -----END PUBLIC KEY-----`;
 const publicKey = await importSPKI(spki, alg);
 
-const studentEmail = (em) => {
+const matchStudentEmail = (em) => {
     const matches = em.match(/^(h(\d{2})(\d)(\d{4}))\@nushigh\.edu\.sg$/);
     if (matches) {
         let returnValue = {
@@ -36,7 +36,7 @@ const studentEmail = (em) => {
     }
 }
 
-const staffEmail = (em) => {
+const matchStaffEmail = (em) => {
     const matches = em.match(/^(a?nhs[a-z]+)\@(nus(high)?)\.edu\.sg$/);
     if (matches) {
         return {
@@ -63,7 +63,7 @@ async function main() {
         return {"type": "unauth"};
     }
 
-    const userData = studentEmail(userJWT.em) ?? staffEmail(userJWT.em) ?? null;
+    const userData = matchStudentEmail(userJWT.em) ?? matchStaffEmail(userJWT.em) ?? null;
 
     if (!userData) {
         return {
