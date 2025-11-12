@@ -10,6 +10,7 @@ hA96KwXIxfOqtPfsj9+W5isFMMt232JYxuebgjnXSKrRecumDyFEmZbSO4B0Kjsk
 8nIyP4GDC+RT7uszCcnL6CfqjPCK+/ppDZdCRjcdSSFzrbRPLTwxv2ZCRTRRY8/6
 aQIDAQAB
 -----END PUBLIC KEY-----`;
+const publicKey = await importSPKI(spki, alg);
 
 const studentEmail = (em) => {
     const matches = em.match(/^(h(\d{2})(\d)(\d{4}))\@nushigh\.edu\.sg$/);
@@ -49,49 +50,32 @@ const staffEmail = (em) => {
     }
 }
 
-const query = new URL(location.href).searchParams;
-
-const isCallback = new URL(import.meta.url).searchParams.has("callback"); // if script imported through ?callback
-
-const goCallback = data => {
-    const callbackUrl = new URL(query.get("callback"));
-    callbackUrl.searchParams.set("user", JSON.stringify(data));
-    location.replace(callbackUrl.href);
-    return;
-}
-
-
 async function main() {
+    const query = new URL(location.href).searchParams;
+    if (!query.has("jwt")) return { "type": "unauth" };
+
     let userJWT;
     try {
         let jwt = query.get("jwt");
-        const publicKey = await importSPKI(spki, alg);
         userJWT = (await jwtVerify(jwt, publicKey)).payload;
-    } catch(e) {
-        if (isCallback) return goCallback({"type": "unauth"});
-        else return {"type": "unauth"};
+    } catch(err) {
+        console.error("[signin-with-nush] Error occurred while decoding JWT payload:", err);
+        return {"type": "unauth"};
     }
 
     const userData = studentEmail(userJWT.em) ?? staffEmail(userJWT.em) ?? null;
 
     if (!userData) {
-        if (isCallback) return goCallback({"type": "unauth", "email": userJWT.em});
-        else return {"type": "unauth", "email": userJWT.em};
+        return {
+            "type": "unauth",
+            "email": userJWT.em,
+            "rawJWT": userJWT
+        };
     }
 
     userData.name = userJWT.n;
-    
-    if (isCallback) return goCallback(userData);
-    else return userData;
+    userData.rawJWT = userJWT;
+    return userData;
 }
 
-if (isCallback) {
-    try {
-        await main();
-    } catch (e){
-        console.error(e);
-        document.body.prepend("An error occured. Check the developer console for more details.")
-    }
-}
-
-export {main as default};
+export default main;
