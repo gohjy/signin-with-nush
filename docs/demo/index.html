@@ -6,15 +6,22 @@
     <title>signin-with-nush demo</title>
 </head>
 <body>
+    <p id="github-warning" style="display: none;">
+        <b>WARNING:</b> Clicking the link below will allow GitHub to link your IP address with the Microsoft account you use to sign in! 
+        If you are concerned about privacy, clone the <a href="https://github.com/gohjy/signin-with-nush">repo</a> instead and run it on localhost!
+    </p>
+
     <p id="main"></p>
 
     <script>
+        if (location.hostname.endsWith(".github.io")) document.querySelector("#github-warning").removeAttribute("style");
+
         const hexauthUrl = new URL("https://auth.coding398.dev/go/microsoft");
         const callbackUrl = new URL("./callback.html", location.href);
         hexauthUrl.searchParams.set("callback", callbackUrl.href);
 
         const link = document.createElement("a");
-        link.textContent = "Sign in";
+        link.textContent = "Sign in with Microsoft, via Hexauth";
         link.href = hexauthUrl.href;
 
         document.querySelector("#main").append(link);

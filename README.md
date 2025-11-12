@@ -3,7 +3,9 @@
 
 A service to allow NUSH students and staff to sign in to your platform with a NUS High Microsoft account through [Hexauth](https://hexauth.coding398.dev). Verifies Hexauth's JWT with [`jose`](https://cdn.jsdelivr.net/npm/jose@6.1.1/) (npm package).
 
-Check out the [demo](./docs/demo/)!
+> [!NOTE]
+>
+> While a [demo](./docs/demo/) is available, please note that accessing it via the GitHub Pages link above will allow GitHub to link your IP address to your identity (name, email and Hexauth ID of the Microsoft account you use to sign in). If you are concerned about privacy, it's better to clone this repo and open it up in `localhost` instead.
 
 ## How to use
 1. On your sign in page, put the link to Hexauth with your own callback response page as the callback parameter:
